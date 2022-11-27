@@ -30,7 +30,8 @@ function Model(name) {
         gl.vertexAttribPointer(shProgram.iAttribVertex, 3, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(shProgram.iAttribVertex);
 
-        gl.drawArrays(gl.LINE_STRIP, 0, this.count);
+        // gl.drawArrays(gl.LINE_STRIP, 0, this.count);
+        gl.drawArrays(gl.TRIANGLES, 0, this.count);
     }
 }
 
@@ -64,6 +65,7 @@ function draw() {
 
     /* Set the values of the projection transformation */
     let projection = m4.perspective(Math.PI / 8, 1, 8, 12);
+    // let projection = m4.ortographic();
 
     /* Get the view matrix from the SimpleRotator object.*/
     let modelView = spaceball.getViewMatrix();
@@ -85,75 +87,103 @@ function draw() {
 
     surface.Draw();
 }
-
+function CreateSurfaceDataPA2() {
+    let vertexList = [];
+    let i = -1;
+    let j = -1;
+    let d = 0.1
+    while (i <= 1-d) {
+        while (j <= 1-d) {
+            let v = richmond(j, i)
+            vertexList.push(v.x, v.y, v.z)
+            v = richmond(j,i+d)
+            vertexList.push(v.x, v.y, v.z)
+            v = richmond(j+d,i)
+            vertexList.push(v.x, v.y, v.z)
+            v = richmond(j,i+d)
+            vertexList.push(v.x, v.y, v.z)
+            v = richmond(j+d,i)
+            vertexList.push(v.x, v.y, v.z)
+            v = richmond(j+d,i+d)
+            vertexList.push(v.x, v.y, v.z)
+            //00 10
+            //01 11
+            j += d
+        }
+        i += d
+        j=-1
+    }
+    return vertexList
+}
 function CreateSurfaceData() {
     let vertexList = [];
-    let i =-1;
-    let j =-1;
-    let b=true;
-    while(i<=1){
-        if(b){
-            while(j<=1){
-                let v = richmond(j,i)
-                vertexList.push(v.x,v.y,v.z)
-                j+=0.01
+    let i = -1;
+    let j = -1;
+    let b = true;
+    let d = 0.1
+    while (i <= 1) {
+        if (b) {
+            while (j <= 1) {
+                let v = richmond(j, i)
+                vertexList.push(v.x, v.y, v.z)
+                j += d
             }
             // j=-1
-            b=!b
+            b = !b
         }
-        else{
-            while(j>=-1){
-                let v = richmond(j,i)
-                vertexList.push(v.x,v.y,v.z)
-                j-=0.01
+        else {
+            while (j >= -1) {
+                let v = richmond(j, i)
+                vertexList.push(v.x, v.y, v.z)
+                j -= d
             }
-            b=!b
+            b = !b
         }
-        i+=0.01;
+        i += d;
     }
-    i =-1;
-    j =-1;
-    b=true;
-    while(i<=1){
-        if(b){
-            while(j<=1){
-                let v = richmond(i,j)
-                vertexList.push(v.x,v.y,v.z)
-                j+=0.01
+    i = -1;
+    j = -1;
+    b = true;
+    while (i <= 1) {
+        if (b) {
+            while (j <= 1) {
+                let v = richmond(i, j)
+                vertexList.push(v.x, v.y, v.z)
+                j += d
             }
             // j=-1
-            b=!b
+            b = !b
         }
-        else{
-            while(j>=-1){
-                let v = richmond(i,j)
-                vertexList.push(v.x,v.y,v.z)
-                j-=0.01
+        else {
+            while (j >= -1) {
+                let v = richmond(i, j)
+                vertexList.push(v.x, v.y, v.z)
+                j -= d
             }
-            b=!b
+            b = !b
         }
-        i+=0.01;
+        i += d;
     }
 
     return vertexList;
 }
 
-function richmond(u,v){
-    let x = (-3*u-u*5+2*(u**3)*(v**2)+3*u*(v**4))/(6*(u**2+v**2))
-    let y = (-3*v-3*v*(u**4)-2*(u**2)*(v**3)+v**5)/(6*(u**2+v**2))
+function richmond(u, v) {
+    let x = (-3 * u - u * 5 + 2 * (u ** 3) * (v ** 2) + 3 * u * (v ** 4)) / (6 * (u ** 2 + v ** 2))
+    let y = (-3 * v - 3 * v * (u ** 4) - 2 * (u ** 2) * (v ** 3) + v ** 5) / (6 * (u ** 2 + v ** 2))
     let z = u
-    return{x:x,y:y,z:z}
+    return { x: x, y: y, z: z }
 
 }
 
-function x(r,t){
-    return (-(Math.cos(t)/(2*r))-(((r**3)*Math.cos(3*t))/6))
+function x(r, t) {
+    return (-(Math.cos(t) / (2 * r)) - (((r ** 3) * Math.cos(3 * t)) / 6))
 }
-function y(r,t){
-    return (-(Math.sin(t)/(2*r))+(((r**3)*Math.sin(3*t))/6))
+function y(r, t) {
+    return (-(Math.sin(t) / (2 * r)) + (((r ** 3) * Math.sin(3 * t)) / 6))
 }
-function z(r,t){
-    return(r*Math.cos(t))
+function z(r, t) {
+    return (r * Math.cos(t))
 }
 
 
@@ -169,7 +199,8 @@ function initGL() {
     shProgram.iColor = gl.getUniformLocation(prog, "color");
 
     surface = new Model('Surface');
-    surface.BufferData(CreateSurfaceData());
+    // surface.BufferData(CreateSurfaceData());
+    surface.BufferData(CreateSurfaceDataPA2());
 
     gl.enable(gl.DEPTH_TEST);
 }
@@ -213,12 +244,12 @@ function createProgram(gl, vShader, fShader) {
 function init() {
     let canvas;
     try {
-        let resolution = Math.min(window.innerHeight,window.innerWidth);
+        let resolution = Math.min(window.innerHeight, window.innerWidth);
         canvas = document.querySelector('canvas');
         gl = canvas.getContext("webgl");
-        canvas.width=resolution;
-        canvas.height=resolution;
-        gl.viewport(0,0,resolution,resolution);
+        canvas.width = resolution;
+        canvas.height = resolution;
+        gl.viewport(0, 0, resolution, resolution);
         if (!gl) {
             throw "Browser does not support WebGL";
         }
