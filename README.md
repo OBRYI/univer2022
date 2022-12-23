@@ -1,2 +1,2 @@
-# univer2022
-University studies. Visualization of graphical and information, in particular
+# Calculation and graphics work
+Visualization of graphical and information
