@@ -1,2 +1,6 @@
-# univer2022
-University studies. Visualization of graphical and information, in particular
+# Lab2_Manchak
+Variant11
+Вхід кн. упр. С14
+Вих2 В3
+Вих3 В10 
+Вих4 В11 
